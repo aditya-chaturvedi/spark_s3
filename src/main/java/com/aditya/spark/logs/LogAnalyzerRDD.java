@@ -1,4 +1,4 @@
-package com.databricks.apps.logs;
+package com.aditya.spark.logs;
 
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.sql.DataFrame;

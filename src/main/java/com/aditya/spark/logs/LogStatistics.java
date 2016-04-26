@@ -1,4 +1,4 @@
-package com.databricks.apps.logs;
+package com.aditya.spark.logs;
 
 import scala.Tuple2;
 import scala.Tuple4;

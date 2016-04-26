@@ -1,4 +1,4 @@
-package com.databricks.apps.logs;
+package com.aditya.spark.logs;
 
 import java.io.Serializable;
 import java.util.logging.Level;
