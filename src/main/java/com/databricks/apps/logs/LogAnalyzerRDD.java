@@ -4,17 +4,18 @@ import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.sql.DataFrame;
 import org.apache.spark.sql.SQLContext;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import scala.Tuple2;
 import scala.Tuple4;
 
 import java.util.List;
 
+@Component
 public class LogAnalyzerRDD {
-  private final SQLContext sqlContext;
 
-  public LogAnalyzerRDD(SQLContext sqlContext) {
-    this.sqlContext = sqlContext;
-  }
+    @Autowired
+    private SQLContext sqlContext;
 
   public LogStatistics processRdd(JavaRDD<ApacheAccessLog> accessLogs) {
     // Spark SQL can imply a schema for a table if given a Java class with getters and setters.

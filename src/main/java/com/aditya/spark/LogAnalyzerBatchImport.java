@@ -5,7 +5,6 @@ import com.databricks.apps.logs.LogAnalyzerRDD;
 import com.databricks.apps.logs.LogStatistics;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
-import org.apache.spark.sql.SQLContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -19,14 +18,13 @@ public class LogAnalyzerBatchImport {
     private JavaSparkContext javaSparkContext;
 
     @Autowired
-    private SQLContext sqlContext;
+    private LogAnalyzerRDD logAnalyzerRDD;
 
     public void analyze(String logFileURL) {
 
         JavaRDD<ApacheAccessLog> accessLogs = javaSparkContext.textFile(logFileURL)
                 .map(ApacheAccessLog::parseFromLogLine);
 
-        LogAnalyzerRDD logAnalyzerRDD = new LogAnalyzerRDD(sqlContext);
         LogStatistics logStatistics = logAnalyzerRDD.processRdd(accessLogs);
         logStatistics.printToStandardOut();
 
