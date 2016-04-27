@@ -1,10 +1,7 @@
 package com.aditya.spark;
 
-import com.aditya.spark.logs.ApacheAccessLog;
-import com.aditya.spark.logs.LogAnalyzerRDD;
-import com.aditya.spark.logs.LogStatistics;
-import org.apache.spark.api.java.JavaRDD;
-import org.apache.spark.api.java.JavaSparkContext;
+import com.aditya.spark.example.WordCount;
+import com.aditya.spark.logs.LogAnalyzer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
@@ -15,27 +12,27 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class SparkS3Application implements CommandLineRunner{
 
     @Autowired
-    private JavaSparkContext javaSparkContext;
+    private LogAnalyzer logAnalyzer;
 
     @Autowired
-    private LogAnalyzerRDD logAnalyzerRDD;
+    private WordCount wordCount;
 
     @Value("${aws.s3.url}")
-    private String logFileUrl;
+    private String logFile;
 
-	public static void main(String[] args) {
-		SpringApplication.run(SparkS3Application.class, args);
+    @Value("${input.threshold}")
+    private int threshold;
+
+    public static void main(String[] args) {
+        SpringApplication.run(SparkS3Application.class, args);
 	}
 
 	@Override
 	public void run(String... args) throws Exception {
-
-        JavaRDD<ApacheAccessLog> accessLogs = javaSparkContext.textFile(logFileUrl)
-                .map(ApacheAccessLog::parseFromLogLine);
-
-        LogStatistics logStatistics = logAnalyzerRDD.processRdd(accessLogs);
-        logStatistics.printToStandardOut();
-
-        javaSparkContext.stop();
+        if (threshold > 0) {
+            wordCount.count(logFile, threshold);
+        } else {
+            logAnalyzer.processLog(logFile);
+        }
     }
 }
